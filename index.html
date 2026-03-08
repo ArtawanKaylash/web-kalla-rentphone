@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KALLA RENTPHONE</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- LOGIN --> 
+
+
+  <div id="page-login" class="page active">
+    <div class="login-container">
+      <div class="login-panel-left">
+        <div class="lp-logo">
+          <span class="lp-logo-icon">📱</span>
+          <span class="lp-logo-text">Kalla Rentphone</span>
+        </div>
+        <div>
+          <h2 class="lp-tagline">Manage your<br/>rental fleet<br/><em>effortlessly.</em></h2>
+          <p class="lp-sub">Platform manajemen sewa HP yang cepat, rapi, dan mudah digunakan untuk bisnis Anda.</p>
+        </div>
+        <div class="lp-stats">
+          <div><div class="lp-stat-num">4</div><div class="lp-stat-label">Modul Utama</div></div>
+          <div><div class="lp-stat-num">MySQL</div><div class="lp-stat-label">Database</div></div>
+          <div><div class="lp-stat-num">∞</div><div class="lp-stat-label">Transaksi</div></div>
+        </div>
+      </div>
+      <div class="login-panel-right">
+        <div class="login-form-wrap">
+          <h1 class="login-heading">Selamat datang</h1>
+          <p class="login-sub">Masuk ke akun Anda untuk melanjutkan</p>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="login-username" placeholder="Masukkan username" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="Masukkan password" />
+          </div>
+          <div id="login-error" class="error-msg hidden"></div>
+          <button class="btn-primary" onclick="doLogin()">Masuk</button>
+          <p class="login-hint">Default — username: <strong>admin</strong> &nbsp;/&nbsp; password: <strong>admin123</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="page-app" class="page hidden">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon-sm">📱</span>
+        <div>
+          <div class="brand-sm">Kalla</div>
+          <div class="brand-sub-sm">Rentphone</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Menu</div>
+        <a class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard">
+          <span class="nav-icon">◼</span> Dashboard <span class="nav-icon-dot"></span>
+        </a>
+        <a class="nav-item" onclick="showSection('phones')" data-section="phones">
+          <span class="nav-icon">◻</span> Daftar HP <span class="nav-icon-dot"></span>
+        </a>
+        <a class="nav-item" onclick="showSection('add-phone')" data-section="add-phone">
+          <span class="nav-icon">+</span> Tambah HP <span class="nav-icon-dot"></span>
+        </a>
+        <div class="sidebar-section-label" style="margin-top:8px">Transaksi</div>
+        <a class="nav-item" onclick="showSection('rent')" data-section="rent">
+          <span class="nav-icon">↗</span> Sewa HP <span class="nav-icon-dot"></span>
+        </a>
+        <a class="nav-item" onclick="showSection('transactions')" data-section="transactions">
+          <span class="nav-icon">≡</span> Riwayat <span class="nav-icon-dot"></span>
+        </a>
+        <div class="sidebar-section-label" style="margin-top:8px">Master Data</div>
+        <a class="nav-item" onclick="showSection('customers')" data-section="customers">
+          <span class="nav-icon">○</span> Pelanggan <span class="nav-icon-dot"></span>
+        </a>
+        <a class="nav-item" onclick="resetCustomerForm();showSection('add-customer')" data-section="add-customer">
+          <span class="nav-icon">+</span> Tambah Pelanggan <span class="nav-icon-dot"></span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="sidebar-avatar">A</div>
+          <div>
+            <div class="user-name" id="sidebar-username">Admin</div>
+            <div class="user-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">Keluar</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-right">
+          <div class="clock" id="live-clock"></div>
+          <div class="notif-bell">🔔</div>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="section-dashboard" class="section active">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">📱</div><div class="stat-value" id="stat-total-hp">—</div><div class="stat-label">Total HP</div></div>
+          <div class="stat-card"><div class="stat-icon">✓</div><div class="stat-value" id="stat-available">—</div><div class="stat-label">Tersedia</div></div>
+          <div class="stat-card"><div class="stat-icon">↻</div><div class="stat-value" id="stat-rented">—</div><div class="stat-label">Sedang Disewa</div></div>
+          <div class="stat-card"><div class="stat-icon">Rp</div><div class="stat-value" id="stat-revenue">—</div><div class="stat-label">Total Pendapatan</div></div>
+        </div>
+        <div class="dash-bottom">
+          <div class="recent-card"><div class="card-title">Transaksi Terbaru</div><div id="recent-transactions"></div></div>
+          <div class="stock-card"><div class="card-title">Stok per Merek</div><div id="stock-summary"></div></div>
+        </div>
+      </section>
+
+      <!-- DAFTAR HP -->
+      <section id="section-phones" class="section hidden">
+        <div class="section-header">
+          <h2 class="section-title">Daftar HP</h2>
+          <input type="text" id="search-phone" placeholder="Cari merek atau model..." oninput="renderPhones()" />
+        </div>
+        <div class="phones-grid" id="phones-grid"></div>
+      </section>
+
+      <!-- TAMBAH / EDIT HP -->
+      <section id="section-add-phone" class="section hidden">
+        <div class="form-card">
+          <h2 class="section-title" id="form-phone-title">Tambah HP Baru</h2>
+          <input type="hidden" id="edit-phone-id" />
+          <div class="form-grid">
+            <div class="form-group"><label>Merek</label><input type="text" id="phone-brand" placeholder="Samsung, Apple, Xiaomi..." /></div>
+            <div class="form-group"><label>Model</label><input type="text" id="phone-model" placeholder="Galaxy S23, iPhone 14..." /></div>
+            <div class="form-group"><label>Warna</label><input type="text" id="phone-color" placeholder="Hitam, Putih..." /></div>
+            <div class="form-group"><label>Storage (GB)</label><input type="number" id="phone-storage" placeholder="128" /></div>
+            <div class="form-group">
+              <label>Kondisi</label>
+              <select id="phone-condition">
+                <option>Baru</option><option>Sangat Baik</option><option>Baik</option><option>Cukup</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Harga Sewa / Hari (Rp)</label><input type="number" id="phone-price" placeholder="50000" /></div>
+            <div class="form-group"><label>IMEI (15 digit)</label><input type="text" id="phone-imei" placeholder="123456789012345" maxlength="15" /></div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="phone-status">
+                <option>Tersedia</option><option>Disewa</option><option>Perawatan</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Keterangan</label><textarea id="phone-notes" placeholder="Catatan tambahan..."></textarea></div>
+          <div id="form-phone-error" class="error-msg hidden"></div>
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="cancelPhoneForm()">Batal</button>
+            <button class="btn-primary" onclick="savePhone()">Simpan HP</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEWA HP -->
+      <section id="section-rent" class="section hidden">
+        <div class="form-card">
+          <h2 class="section-title">Form Sewa HP</h2>
+          <input type="hidden" id="rent-customer-id" />
+          <div class="form-group" style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+            <label>Pilih Pelanggan Terdaftar <span style="color:var(--on-dark-3);font-weight:400;text-transform:none;letter-spacing:0">(opsional — auto-isi data di bawah)</span></label>
+            <select id="rent-customer-select" onchange="fillRentFromCustomer()"></select>
+          </div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nama Pelanggan</label><input type="text" id="rent-customer" placeholder="Nama lengkap..." /></div>
+            <div class="form-group"><label>NIK (16 digit)</label><input type="text" id="rent-nik" placeholder="3271xxxxxxxxxx" maxlength="16" /></div>
+            <div class="form-group"><label>No. HP Pelanggan</label><input type="text" id="rent-phone-customer" placeholder="08xxxxxxxxxx" /></div>
+            <div class="form-group"><label>Pilih HP</label><select id="rent-phone-select" onchange="calcRentCost()"></select></div>
+            <div class="form-group"><label>Tanggal Mulai</label><input type="date" id="rent-start" oninput="calcRentCost()" /></div>
+            <div class="form-group"><label>Tanggal Selesai</label><input type="date" id="rent-end" oninput="calcRentCost()" /></div>
+          </div>
+          <div class="rent-summary" id="rent-summary" style="display:none">
+            <h4>Ringkasan Biaya</h4>
+            <div class="summary-row"><span>Durasi</span><span id="sum-duration">—</span></div>
+            <div class="summary-row"><span>Harga / Hari</span><span id="sum-price-day">—</span></div>
+            <div class="summary-row total-row"><span>Total</span><span id="sum-total">—</span></div>
+          </div>
+          <div id="form-rent-error" class="error-msg hidden"></div>
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="resetRentForm()">Reset</button>
+            <button class="btn-primary" onclick="saveRent()">Konfirmasi Sewa</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSAKSI -->
+      <section id="section-transactions" class="section hidden">
+        <div class="section-header">
+          <h2 class="section-title">Riwayat Transaksi</h2>
+          <select id="filter-status-tx" onchange="renderTransactions()">
+            <option value="">Semua Status</option>
+            <option value="Aktif">Aktif</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Kode TX</th><th>Pelanggan</th><th>HP</th><th>Mulai</th><th>Selesai</th><th>Total</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="tx-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:var(--on-dark-3)">Memuat...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PELANGGAN -->
+      <section id="section-customers" class="section hidden">
+        <div class="section-header">
+          <h2 class="section-title">Data Pelanggan</h2>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="text" id="search-customer" placeholder="Cari nama, NIK, atau HP..." oninput="renderCustomers()" />
+            <button class="btn-primary" style="width:auto;padding:9px 18px;font-size:13px;white-space:nowrap" onclick="resetCustomerForm();showSection('add-customer')">+ Tambah Pelanggan</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Nama</th><th>NIK</th><th>No. HP</th><th>Catatan</th><th>Transaksi</th><th>Total Bayar</th><th>Aksi</th></tr></thead>
+            <tbody id="customers-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--on-dark-3)">Memuat...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAMBAH / EDIT PELANGGAN -->
+      <section id="section-add-customer" class="section hidden">
+        <div class="form-card">
+          <h2 class="section-title" id="form-customer-title">Tambah Pelanggan</h2>
+          <input type="hidden" id="edit-customer-id" />
+          <div class="form-grid">
+            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="customer-name" placeholder="Nama sesuai KTP..." /></div>
+            <div class="form-group"><label>NIK (16 digit)</label><input type="text" id="customer-nik" placeholder="3271xxxxxxxxxx" maxlength="16" /></div>
+            <div class="form-group"><label>No. HP</label><input type="text" id="customer-phone" placeholder="08xxxxxxxxxx" /></div>
+            <div class="form-group"><label>Tanggal Lahir</label><input type="date" id="customer-dob" /></div>
+          </div>
+          <div class="form-group"><label>Alamat</label><input type="text" id="customer-address" placeholder="Jl. Contoh No. 1, Kota..." /></div>
+          <div class="form-group"><label>Catatan</label><textarea id="customer-notes" rows="3" placeholder="Catatan tambahan..."></textarea></div>
+          <div id="form-customer-error" class="error-msg hidden"></div>
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="cancelCustomerForm()">Batal</button>
+            <button class="btn-primary" onclick="saveCustomer()">Simpan Pelanggan</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL KEMBALIKAN HP -->
+  <div id="modal-return" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>Kembalikan HP</h3>
+      <p id="modal-return-text"></p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal()">Batal</button>
+        <button class="btn-primary" onclick="confirmReturn()">Konfirmasi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
